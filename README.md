@@ -2,9 +2,9 @@
 
 <img src = "https://github.com/garyptchoi/ellipsoidal-map/blob/main/cover.png" height="360" />
 
-* Fast ellipsoidal conformal map (FECM): Compute an ellipsoidal conformal parameterization of a genus-0 closed surface using the method in [1].
+* **Fast Ellipsoidal Conformal Map (FECM)**: Compute an ellipsoidal conformal parameterization of a genus-0 closed surface using the method in [1].
 
-* Fast ellipsoidal quasi-conformal map (FEQCM): Compute an ellipsoidal quasi-conformal parameterization of a genus-0 closed surface with prescribed landmark constraints using the method in [1].
+* **Fast Ellipsoidal Quasi-Conformal Map (FEQCM)**: Compute an ellipsoidal quasi-conformal parameterization of a genus-0 closed surface with prescribed landmark constraints using the method in [1].
 
 Any comments and suggestions are welcome. 
 
@@ -15,6 +15,8 @@ If you use this code in your own work, please cite the following papers:
     Preprint, 2023.
 
 Copyright (c) 2023, Gary P. T. Choi
+
+https://www.math.cuhk.edu.hk/~ptchoi/
 
 ===============================================================
 
