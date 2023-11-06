@@ -22,7 +22,7 @@
 %
 % [1] G. P. T. Choi, 
 %     "Fast ellipsoidal conformal and quasi-conformal parameterization of genus-0 closed surfaces".
-%     Preprint, 2023.
+%     Preprint, arXiv:2311.01788, 2023.
 % 
 % Copyright (c) 2023, Gary P. T. Choi
 
