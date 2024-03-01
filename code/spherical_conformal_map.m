@@ -1,4 +1,4 @@
-function map = spherical_conformal_map(v,f)
+function [map,z] = spherical_conformal_map(v,f)
 % A linear method for computing spherical conformal map of a genus-0 closed surface
 %
 % Input:
@@ -7,14 +7,16 @@ function map = spherical_conformal_map(v,f)
 %
 % Output:
 % map: nv x 3 vertex coordinates of the spherical conformal parameterization
+% z: nv x 3 planar parameterization result before the final projection 
+%    (to be used for simplifying the subsequent computation in the ellipsoidal mapping code)
 %
 % If you use this code in your own work, please cite the following paper:
 % [1] P. T. Choi, K. C. Lam, and L. M. Lui, 
 %     "FLASH: Fast Landmark Aligned Spherical Harmonic Parameterization for Genus-0 Closed Brain Surfaces."
 %     SIAM Journal on Imaging Sciences, vol. 8, no. 1, pp. 67-94, 2015.
 %
-% Copyright (c) 2013-2018, Gary Pui-Tung Choi
-% https://scholar.harvard.edu/choi
+% Copyright (c) 2013-2024, Gary Pui-Tung Choi
+
 
 %% Check whether the input mesh is genus-0
 if length(v)-3*length(f)/2+length(f) ~= 2
@@ -61,11 +63,8 @@ d = zeros(nv,1); d(p1) = y1; d(p2) = y2; d(p3) = y3;
 z = M \ complex(c,d);
 z = z-mean(z);
 
-% inverse stereographic projection
-S = [2*real(z)./(1+abs(z).^2), 2*imag(z)./(1+abs(z).^2), (-1+abs(z).^2)./(1+abs(z).^2)];
-
 %% Find optimal big triangle size
-w = complex(S(:,1)./(1+S(:,3)), S(:,2)./(1+S(:,3)));
+w = z./abs(z).^2; % simplified formula
 
 % find the index of the southernmost triangle
 [~, index] = sort(abs(z(f(:,1)))+abs(z(f(:,2)))+abs(z(f(:,3))));
@@ -91,7 +90,7 @@ S = [2*real(z)./(1+abs(z).^2), 2*imag(z)./(1+abs(z).^2), (-1+abs(z).^2)./(1+abs(
 
 if sum(sum(isnan(S))) ~= 0
     % if harmonic map fails due to very bad triangulations, use tutte map
-    S = spherical_tutte_map(f,bigtri);
+    [S,z] = spherical_tutte_map(f,bigtri);
 end
 
 %% South pole step
@@ -105,7 +104,8 @@ fixnum = max(round(length(v)/10),3);
 fixed = I(1:min(length(v),fixnum)); 
 
 % south pole stereographic projection
-P = [S(:,1)./(1+S(:,3)), S(:,2)./(1+S(:,3))]; 
+P = [real(z)./abs(z).^2, imag(z)./abs(z).^2]; % simplified formula
+
 
 % compute the Beltrami coefficient
 mu = beltrami_coefficient(P, f, v); 
@@ -130,6 +130,6 @@ end
 z = complex(map(:,1),map(:,2));
 
 % inverse south pole stereographic projection
-map = [2*real(z)./(1+abs(z).^2), 2*imag(z)./(1+abs(z).^2), -(abs(z).^2-1)./(1+abs(z).^2)];
+map = [2*real(z)./(1+abs(z).^2), 2*imag(z)./(1+abs(z).^2), (1-abs(z).^2)./(1+abs(z).^2)];
 
 end

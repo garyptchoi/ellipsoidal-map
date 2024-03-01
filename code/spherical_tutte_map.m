@@ -1,4 +1,4 @@
-function map = spherical_tutte_map(f, bigtri)
+function [map,z] = spherical_tutte_map(f, bigtri)
 % Compute the spherical Tutte map using the approach in [1], with the cotangent Laplacian replaced by the Tutte Laplacian.
 % Invoked only if the harmonic map fails due to very bad triangulations.
 % 
@@ -7,8 +7,7 @@ function map = spherical_tutte_map(f, bigtri)
 %     "FLASH: Fast Landmark Aligned Spherical Harmonic Parameterization for Genus-0 Closed Brain Surfaces."
 %     SIAM Journal on Imaging Sciences, vol. 8, no. 1, pp. 67-94, 2015.
 %
-% Copyright (c) 2013-2018, Gary Pui-Tung Choi
-% https://scholar.harvard.edu/choi
+% Copyright (c) 2013-2024, Gary Pui-Tung Choi
 
 if nargin < 2
     bigtri = 1;
@@ -37,10 +36,11 @@ z = M \ b;
 z = z-mean(z);
 
 % inverse stereographic projection
-S = [2*real(z)./(1+abs(z).^2), 2*imag(z)./(1+abs(z).^2), (-1+abs(z).^2)./(1+abs(z).^2)];
+% S = [2*real(z)./(1+abs(z).^2), 2*imag(z)./(1+abs(z).^2), (-1+abs(z).^2)./(1+abs(z).^2)];
 
 %% Find optimal big triangle size
-w = complex(S(:,1)./(1+S(:,3)), S(:,2)./(1+S(:,3)));
+% w = complex(S(:,1)./(1+S(:,3)), S(:,2)./(1+S(:,3)));
+w = z./abs(z).^2; % simplified formula
 
 % find the index of the southernmost triangle
 [~, index] = sort(abs(z(f(:,1)))+abs(z(f(:,2)))+abs(z(f(:,3))));

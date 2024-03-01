@@ -26,10 +26,10 @@ function map = ellipsoidal_quasiconformal_map(v,f,a,b,c,landmark,target,lambda)
 %     "Fast ellipsoidal conformal and quasi-conformal parameterization of genus-0 closed surfaces".
 %     Preprint, arXiv:2311.01788, 2023.
 % 
-% Copyright (c) 2023, Gary P. T. Choi
+% Copyright (c) 2023-2024, Gary P. T. Choi
+
 
 % check whether the target landmark positions lie on the ellipsoid
-
 if max(abs(target(:,1).^2/a^2+target(:,2).^2/b^2+target(:,3).^2/c^2-1)) > 1e-5
     error('The target landmark positions do not lie on the ellipsoid!');
 end
@@ -55,11 +55,10 @@ v_centroid = (v(f(:,1),:) + v(f(:,2),:) + v(f(:,3),:))/3;
 %% Spherical conformal map for the input surface
 
 % Spherical conformal map (using Choi et al., SIAM J. Imaging Sci. 2015)
-S = spherical_conformal_map(v,f);
+[S,w] = spherical_conformal_map(v,f);
 
 % Project the sphere onto the plane
-p = stereographic(S);
-z = complex(p(:,1),p(:,2));
+z = w./abs(w).^2; % simplified formula
 
 % find the centroid of the two polar triangles
 S_north = (S(f(f_id_north,1),:)+S(f(f_id_north,2),:)+S(f(f_id_north,3),:))/3;
@@ -69,7 +68,7 @@ S_south = (S(f(f_id_south,1),:)+S(f(f_id_south,2),:)+S(f(f_id_south,3),:))/3;
 S_north = S_north/sqrt(S_north(:,1)^2+S_north(:,2)^2+S_north(:,3)^2);
 S_south = S_south/sqrt(S_south(:,1)^2+S_south(:,2)^2+S_south(:,3)^2);
 
-% stereographic porjections
+% stereographic projections
 p_north = stereographic(S_north);
 p_south = stereographic(S_south);
 
@@ -85,8 +84,7 @@ z = z*exp(-1i*angle(z(id_right)));
 
 %% balancing scheme
 
-w = stereographic_ellipsoid_south_pole(stereographic_ellipsoid(z,a,b,c),a,b,c);
-w = complex(w(:,1),w(:,2));
+w = z./abs(z).^2; % simplified formula
 
 % Compute the perimeters
 perimeter_north = (abs(z(f(f_id_north,1))-z(f(f_id_north,2))) + ...
@@ -286,27 +284,6 @@ function P = stereographic_ellipsoid(p,a,b,c)
     else
       z = p(:,3);
       P = [(u/a)./(1-z/c), (v/b)./(1-z/c)];
-      P(isnan(P)) = Inf;
-    end
-end
-
-function P = stereographic_ellipsoid_south_pole(p,a,b,c)
-% South-pole ellipsoidal stereographic projection and its inverse
-    if size(p, 2) == 1
-      p = [real(p), imag(p)];
-    end
-    u = p(:,1);
-    v = p(:,2);
-    if size(p,2) < 3
-      z = 1 + u.^2 + v.^2;
-      P = [2*a*u./z, 2*b*v./z, -c*(-1+u.^2+v.^2)./z];
-      P(isnan(z)|(~isfinite(z)),1) = 0;
-      P(isnan(z)|(~isfinite(z)),2) = 0;
-      P(isnan(z)|(~isfinite(z)),3) = -c;
-        
-    else
-      z = p(:,3);
-      P = [(u/a)./(1+z/c), (v/b)./(1+z/c)];
       P(isnan(P)) = Inf;
     end
 end
