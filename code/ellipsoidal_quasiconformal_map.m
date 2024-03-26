@@ -20,11 +20,11 @@ function map = ellipsoidal_quasiconformal_map(v,f,a,b,c,landmark,target,lambda)
 %   x,y,z-axes beforehand.
 % - the "target" coordinates must lie on the prescribed ellipsoid.
 %
-% If you use this code in your own work, please cite the following papers:
+% If you use this code in your work, please cite the following papers:
 %
 % [1] G. P. T. Choi, 
 %     "Fast ellipsoidal conformal and quasi-conformal parameterization of genus-0 closed surfaces".
-%     Preprint, arXiv:2311.01788, 2023.
+%     Journal of Computational and Applied Mathematics, 447, 115888, 2024.
 % 
 % Copyright (c) 2023-2024, Gary P. T. Choi
 
