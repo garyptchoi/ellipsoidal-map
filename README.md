@@ -12,7 +12,7 @@ If you use this code in your work, please cite the following papers:
 
 [1] G. P. T. Choi, 
     "[Fast ellipsoidal conformal and quasi-conformal parameterization of genus-0 closed surfaces.](https://doi.org/10.1016/j.cam.2024.115888)"
-    Journal of Computational and Applied Mathematics, 115888, 2024.
+    Journal of Computational and Applied Mathematics, 447, 115888, 2024.
 
 Copyright (c) 2023-2024, Gary P. T. Choi
 
